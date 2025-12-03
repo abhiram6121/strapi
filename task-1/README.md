@@ -1,61 +1,51 @@
-# 🚀 Getting started with Strapi
+## 🛠️ Prerequisites
 
-Strapi comes with a full featured [Command Line Interface](https://docs.strapi.io/dev-docs/cli) (CLI) which lets you scaffold and manage your project in seconds.
+Ensure you have the following tools installed and ready:
 
-### `develop`
-
-Start your Strapi application with autoReload enabled. [Learn more](https://docs.strapi.io/dev-docs/cli#strapi-develop)
-
-```
-npm run develop
-# or
-yarn develop
-```
-
-### `start`
-
-Start your Strapi application with autoReload disabled. [Learn more](https://docs.strapi.io/dev-docs/cli#strapi-start)
-
-```
-npm run start
-# or
-yarn start
-```
-
-### `build`
-
-Build your admin panel. [Learn more](https://docs.strapi.io/dev-docs/cli#strapi-build)
-
-```
-npm run build
-# or
-yarn build
-```
-
-## ⚙️ Deployment
-
-Strapi gives you many possible deployment options for your project including [Strapi Cloud](https://cloud.strapi.io). Browse the [deployment section of the documentation](https://docs.strapi.io/dev-docs/deployment) to find the best solution for your use case.
-
-```
-yarn strapi deploy
-```
-
-## 📚 Learn more
-
-- [Resource center](https://strapi.io/resource-center) - Strapi resource center.
-- [Strapi documentation](https://docs.strapi.io) - Official Strapi documentation.
-- [Strapi tutorials](https://strapi.io/tutorials) - List of tutorials made by the core team and the community.
-- [Strapi blog](https://strapi.io/blog) - Official Strapi blog containing articles made by the Strapi team and the community.
-- [Changelog](https://strapi.io/changelog) - Find out about the Strapi product updates, new features and general improvements.
-
-Feel free to check out the [Strapi GitHub repository](https://github.com/strapi/strapi). Your feedback and contributions are welcome!
-
-## ✨ Community
-
-- [Discord](https://discord.strapi.io) - Come chat with the Strapi community including the core team.
-- [Forum](https://forum.strapi.io/) - Place to discuss, ask questions and find answers, show your Strapi project and get feedback or just talk with other Community members.
-- [Awesome Strapi](https://github.com/strapi/awesome-strapi) - A curated list of awesome things related to Strapi.
+* **Node.js LTS:** The latest stable version of Node.js.
+* **PostgreSQL Database:** Database server installed and running.
 
 ---
 
-<sub>🤫 Psst! [Strapi is hiring](https://strapi.io/careers).</sub>
+## 💻 1. Project Creation & Setup
+
+1.  **Run the Creation Command:**
+    Replace `my-project` with your desired name.
+
+    ```bash
+    npx create-strapi-app@latest my-project
+    ```
+
+2.  **Configure Database:**
+    When prompted, choose the `postgres` client for the Default database client option. Enter the credentials for the dedicated database and user you created.
+
+3.  **Navigate to Project Folder:**
+    ```bash
+    cd my-project
+    ```
+
+---
+
+## 🚀 2. Launching Strapi
+
+1.  **Start the Server:**
+    ```bash
+    npm run develop
+    ```
+
+2.  **Admin Panel Access:**
+    The server will launch at **`http://localhost:1337`**. The **Admin Panel** will open automatically on the first run.
+    * **Action:** Create your initial **Administrator Account**.
+
+---
+
+## 📚 3. Project Structure
+
+| Folder | Purpose |
+| :--- | :--- |
+| **`config`** | Global settings, including database connections and server ports. |
+| **`api`** | Holds all your custom Content Types. |
+| **`.env`** | Stores Environment Variables. |
+| **`package.json`** | Defines project Dependencies and available Scripts. |
+
+---
