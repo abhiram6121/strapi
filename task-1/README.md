@@ -11,7 +11,9 @@ Ensure you have the following tools installed and running:
 
 ---
 
-## 💻 1. Project Creation & Initial Setup
+## 💻 Task 1: Project Creation & Initial Setup
+
+Run the application on your host machine to initialize the database and create the initial administrator user.
 
 ### 1.1 Run the Creation Command:
 
@@ -31,28 +33,24 @@ When prompted, choose **`Custom (manual settings)`** and select the **`postgres`
 cd my-project
 ```
 
----
-
-## 🚀 2. Launching Strapi
-
-### 2.1 Start the Server:
+### 1.4 Start the Server:
 
 ```bash
 npm run develop
 ```
 
-### 2.2 Admin Panel Access:
+### 1.5 Admin Panel Access:
 
 The server will launch at **`http://localhost:1337`**. The **Admin Panel** will open automatically on the first run.
 * **Action:** Create your initial **Administrator Account**.
 
 ---
 
-## 🐳 3. Dockerization
+## 🐳 Task 2: Standalone Container
 
-Build and run the application using the optimized [`Dockerfile`](Dockerfile).
+This task demonstrates deploying Strapi as a single container [`Dockerfile`](Dockerfile) that connects to your host-installed PostgreSQL database.
 
-### 3.1 Build and Run Commands
+### 2.1 Build and Run Commands
 
 ```bash
 # ----------------------------------------------
@@ -77,6 +75,40 @@ docker run -it --rm \
     --env-file .env \
     --network host \
     strapi-app:local
+```
+
+---
+
+## ⚙️ Task 3: Set up a Dockerized Environment with Nginx Reverse Proxy
+
+This task implements the standard production architecture by orchestrating all services (Strapi, PostgreSQL, Nginx) within a user-defined Docker network using **Docker Compose**.
+
+### 3.1 Architecture Overview
+
+This setup requires defining the multi-service architecture in docker-compose.yml, which creates a persistent database volume and configures the Nginx proxy.
+
+| File Name | Purpose |
+| :--- | :--- |
+| **[`docker-compose.yml`](docker-compose.yml)** | Defines all three services, networking, and a persistent volume for PostgreSQL data. |
+| **[`nginx.conf`](nginx.conf)** | Configures the Nginx container to reverse proxy host traffic to the internal Strapi service. |
+| **[`Dockerfile`](Dockerfile)** | Used to build the final `strapi` container image. |
+
+### 3.2 Launch Command
+
+Run this command from your project root. It will build the Strapi image, create the `strapi-net` network, and start all three services in detached mode.
+
+```bash
+docker compose up -d --build
+```
+
+### 3.3 Access & Verification
+
+- Access the Strapi Admin Dashboard via the Nginx reverse proxy. http://localhost/admin
+
+- Confirm that all three services are running and that Nginx is exposing port 80:
+
+```bash
+docker compose ps
 ```
 
 ---
