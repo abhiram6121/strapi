@@ -113,6 +113,10 @@ docker compose ps
 
 ---
 
+## ⚙️ Task 4: Docker Deep-Dive
+
+[Dive into the core concepts, architecture, and advanced features of Docker, covering networking, volumes, and Docker Compose orchestration.](docker.md)
+
 ## 📚 Project Structure
 
 | Folder | Purpose |
