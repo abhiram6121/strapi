@@ -113,9 +113,13 @@ docker compose ps
 
 ---
 
-## ⚙️ Task 4: Docker Deep-Dive
+## ⚙️ Task 4: [Docker Deep-Dive](docker.md)
 
-[Dive into the core concepts, architecture, and advanced features of Docker, covering networking, volumes, and Docker Compose orchestration.](docker.md)
+Dive into the core concepts, architecture, and advanced features of Docker, covering networking, volumes, and Docker Compose orchestration.
+
+## 🏗️ Task 5: [Implement Strapi stack deployment using Terraform](terraform/README.md)
+
+Provision EC2 instance, RDS PostgreSQL database, networking, and security groups. Configures EC2 with Docker via `user_data.sh` to run the containerized Strapi application.
 
 ## 📚 Project Structure
 
