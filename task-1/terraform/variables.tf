@@ -13,10 +13,16 @@ variable "aws_account_id" {
   default     = "301782007642"
 }
 
-variable "docker_image" {
-  description = "Docker image"
+variable "ecr_repo_name" {
+  description = "ECR repo name"
   type        = string
-  default     = "strapi-cms:latest"
+  default     = "strapi-cms"
+}
+
+variable "docker_image_tag" {
+  description = "Docker image tag"
+  type        = string
+  default     = "latest"
 }
 
 variable "db_name" {

@@ -1,0 +1,71 @@
+name: CD - Terraform Deploy Strapi
+
+on:
+  workflow_dispatch:
+    inputs:
+      image_tag:
+        description: 'Docker image tag (SHA or latest) to deploy'
+        required: true
+        default: 'latest'
+
+jobs:
+  terraform:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v5
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Terraform Init
+        id: init
+        run: terraform init
+        working-directory: ./task-1/terraform
+
+      - name: Terraform Plan
+        run: |
+          terraform plan \
+            -var "aws_access_key_id=${{ secrets.AWS_ACCESS_KEY_ID }}" \
+            -var "aws_secret_access_key=${{ secrets.AWS_SECRET_ACCESS_KEY }}" \
+            -var "aws_region=${{ secrets.AWS_REGION }}" \
+            -var "db_password=${{ secrets.DB_PASSWORD }}" \
+            -var "admin_jwt_secret=${{ secrets.ADMIN_JWT_SECRET }}" \
+            -var "jwt_secret=${{ secrets.JWT_SECRET }}" \
+            -var "app_keys=${{ secrets.APP_KEYS }}" \
+            -var "api_token_salt=${{ secrets.API_TOKEN_SALT }}" \
+            -var "docker_image_tag=${{ github.event.inputs.image_tag }}"
+        working-directory: ./task-1/terraform
+
+      - name: Terraform Apply
+        run: |
+          terraform apply -auto-approve \
+            -var "aws_access_key_id=${{ secrets.AWS_ACCESS_KEY_ID }}" \
+            -var "aws_secret_access_key=${{ secrets.AWS_SECRET_ACCESS_KEY }}" \
+            -var "aws_region=${{ secrets.AWS_REGION }}" \
+            -var "db_password=${{ secrets.DB_PASSWORD }}" \
+            -var "admin_jwt_secret=${{ secrets.ADMIN_JWT_SECRET }}" \
+            -var "jwt_secret=${{ secrets.JWT_SECRET }}" \
+            -var "app_keys=${{ secrets.APP_KEYS }}" \
+            -var "api_token_salt=${{ secrets.API_TOKEN_SALT }}" \
+            -var "docker_image_tag=${{ github.event.inputs.image_tag }}"
+        working-directory: ./task-1/terraform
+
+      - name: Get Public IP for Verification
+        id: output
+        run: echo "PUBLIC_IP=$(terraform output -raw instance_public_ip)" >> $GITHUB_ENV
+        working-directory: ./task-1/terraform
+        if: success()
+      
+      - name: Verification Message
+        run: |
+          echo "Deployment successful for image tag: ${{ github.event.inputs.image_tag }}"
+          echo "Strapi URL: http://${{ env.PUBLIC_IP }}:1337"

@@ -20,7 +20,12 @@ export AWS_DEFAULT_REGION=${aws_region}
 aws ecr get-login-password --region ${aws_region} | docker login --username AWS --password-stdin ${aws_account_id}.dkr.ecr.${aws_region}.amazonaws.com
 
 # 5. Pull the latest container image
-docker pull ${aws_account_id}.dkr.ecr.${aws_region}.amazonaws.com/${docker_image}
+if [ "$(docker ps -a -q -f name=strapi)" ]; then
+    docker stop strapi
+    docker rm strapi
+fi
+
+docker pull ${aws_account_id}.dkr.ecr.${aws_region}.amazonaws.com/${ecr_repo_name}:${docker_image_tag}
 
 # 6. Run Strapi container
 docker run -d \
@@ -40,4 +45,4 @@ docker run -d \
   -e APP_KEYS=${app_keys} \
   -e API_TOKEN_SALT=${api_token_salt} \
   -e NODE_ENV=development \
-  ${aws_account_id}.dkr.ecr.${aws_region}.amazonaws.com/${docker_image}
+  ${aws_account_id}.dkr.ecr.${aws_region}.amazonaws.com/${ecr_repo_name}:${docker_image_tag}

@@ -117,7 +117,8 @@ resource "aws_instance" "strapi_server" {
     aws_access_key_id     = var.aws_access_key_id
     aws_secret_access_key = var.aws_secret_access_key
     aws_account_id        = var.aws_account_id
-    docker_image          = var.docker_image
+    ecr_repo_name         = var.ecr_repo_name
+    docker_image_tag      = var.docker_image_tag
   })
 
   tags = { Name = "strapi-server-abhiram" }

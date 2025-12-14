@@ -121,6 +121,15 @@ Dive into the core concepts, architecture, and advanced features of Docker, cove
 
 Provision EC2 instance, RDS PostgreSQL database, networking, and security groups. Configures EC2 with Docker via `user_data.sh` to run the containerized Strapi application.
 
+## 🤖 Task 6: CI/CD Pipeline Setup
+
+This task established the automated build and deployment process for the Strapi application. We introduced a full Continuous Integration (CI) and Continuous Deployment (CD) pipeline using GitHub Actions, Terraform, and AWS ECR.
+
+### 6.1 Pipeline Architecture
+- [CI Workflow](../.github/workflows/ci.yml): Automatically runs on code push. It is responsible for building the Strapi Docker image and pushing the uniquely tagged image (based on commit SHA) to the AWS ECR repository.
+
+- [CD Workflow](../.github/workflows/terraform.yml): Manually triggered to ensure control over deployments. It runs terraform plan and apply using the specified image tag to update the EC2 instance and maintain the RDS database connection.
+
 ## 📚 Project Structure
 
 | Folder | Purpose |

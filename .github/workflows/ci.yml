@@ -1,0 +1,47 @@
+name: CI - Build & Push Strapi Docker Image to ECR
+
+on:
+  push:
+    branches:
+      - abhiram
+    paths:
+      - 'task-1/**' 
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    
+    outputs:
+      image_tag: ${{ steps.image_tag.outputs.TAG }}
+
+    env:        
+      ECR_REPOSITORY: strapi-cms
+      
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v5
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }} 
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2 
+
+      - name: Calculate Image Tag (Short SHA)
+        id: image_tag
+        run: echo "TAG=$(echo ${{ github.sha }} | cut -c1-7)" >> $GITHUB_OUTPUT
+
+      - name: Build and push Docker image to ECR
+        uses: docker/build-push-action@v5
+        with:
+          context: ./task-1 
+          file: ./task-1/Dockerfile
+          push: true
+          tags: |
+            ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/${{ env.ECR_REPOSITORY }}:${{ steps.image_tag.outputs.TAG }}
+            ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/${{ env.ECR_REPOSITORY }}:latest
