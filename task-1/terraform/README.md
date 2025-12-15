@@ -5,7 +5,7 @@ The project automates the provisioning of an AWS infrastructure that includes an
 ### 🛠️ Prerequisites
 
 * **AWS Account:** With necessary permissions
-* **Terraform CLI:** (v5.0 or newer recommended).
+* **Terraform:** (v1.10 or newer recommended).
 * **AWS CLI:** Configured locally with access credentials.
 * **Docker Image:** Build the Docker image locally and push it to AWS ECR
 
@@ -55,6 +55,7 @@ Once deployment completes, your infrastructure includes:
 - An RDS PostgreSQL 17 instance.
 - An EC2 instance that runs a `user_data.sh` script to pull the Docker image from ECR and launch the Strapi container.
 - Security groups and networking set up for secure access.
+- An S3 bucket configured for remote Terraform state storage with native S3 state locking enabled
 
 #### 7. Managing Resources
 - To update or reconfigure, modify `.tf` files, run `terraform plan`, then `terraform apply`.
