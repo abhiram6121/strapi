@@ -1,0 +1,54 @@
+name: CD - Terraform Deploy Strapi to ECS
+
+on:
+  workflow_dispatch:
+    inputs:
+      image_tag:
+        description: 'Docker image tag (SHA or latest) to deploy'
+        required: true
+        default: 'latest'
+
+jobs:
+  terraform:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v5
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Terraform Init
+        id: init
+        run: terraform init
+        working-directory: ./task-1/terraform-ecs
+
+      - name: Terraform Plan
+        run: |
+          terraform plan \
+            -var "db_password=${{ secrets.DB_PASSWORD }}" \
+            -var "admin_jwt_secret=${{ secrets.ADMIN_JWT_SECRET }}" \
+            -var "jwt_secret=${{ secrets.JWT_SECRET }}" \
+            -var "app_keys=${{ secrets.APP_KEYS }}" \
+            -var "api_token_salt=${{ secrets.API_TOKEN_SALT }}" \
+            -var "docker_image_tag=${{ github.event.inputs.image_tag }}"
+        working-directory: ./task-1/terraform-ecs
+
+      - name: Terraform Apply
+        run: |
+          terraform apply -auto-approve \
+            -var "db_password=${{ secrets.DB_PASSWORD }}" \
+            -var "admin_jwt_secret=${{ secrets.ADMIN_JWT_SECRET }}" \
+            -var "jwt_secret=${{ secrets.JWT_SECRET }}" \
+            -var "app_keys=${{ secrets.APP_KEYS }}" \
+            -var "api_token_salt=${{ secrets.API_TOKEN_SALT }}" \
+            -var "docker_image_tag=${{ github.event.inputs.image_tag }}"
+        working-directory: ./task-1/terraform-ecs
