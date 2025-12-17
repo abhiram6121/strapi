@@ -100,6 +100,11 @@ resource "aws_iam_role_policy_attachment" "attach_ecs_policy" {
 
 resource "aws_ecs_cluster" "main" {
   name = "abhiram-strapi-ecs-cluster"
+
+  setting {
+    name  = "containerInsights"
+    value = "enabled"
+  }
 }
 
 # ECS Task Definition for Strapi
@@ -130,6 +135,14 @@ resource "aws_ecs_task_definition" "strapi" {
       { name = "DATABASE_SSL_REJECT_UNAUTHORIZED", value = "false" },
       { name = "NODE_ENV", value = "development" },
     ]
+    logConfiguration = {
+      logDriver = "awslogs"
+      options = {
+        awslogs-group         = aws_cloudwatch_log_group.strapi.name
+        awslogs-region        = var.aws_region
+        awslogs-stream-prefix = "ecs/strapi-abhiram"
+      }
+    }
   }])
 }
 
