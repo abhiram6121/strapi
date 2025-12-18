@@ -30,10 +30,10 @@ resource "aws_security_group" "strapi_ecs_sg" {
   vpc_id      = data.aws_vpc.default.id
 
   ingress {
-    from_port   = 1337
-    to_port     = 1337
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
+    from_port       = 1337
+    to_port         = 1337
+    protocol        = "tcp"
+    security_groups = [aws_security_group.alb_sg.id]
   }
   egress {
     from_port   = 0
@@ -133,7 +133,7 @@ resource "aws_ecs_task_definition" "strapi" {
       { name = "API_TOKEN_SALT", value = var.api_token_salt },
       { name = "DATABASE_SSL", value = "true" },
       { name = "DATABASE_SSL_REJECT_UNAUTHORIZED", value = "false" },
-      { name = "NODE_ENV", value = "development" },
+      { name = "NODE_ENV", value = "production" },
     ]
     logConfiguration = {
       logDriver = "awslogs"
@@ -155,8 +155,14 @@ resource "aws_ecs_service" "strapi" {
   launch_type     = "FARGATE"
 
   network_configuration {
-    subnets          = [data.aws_subnets.default.ids[0]]
+    subnets          = [data.aws_subnets.default.ids[0], data.aws_subnets.default.ids[1], data.aws_subnets.default.ids[2]]
     security_groups  = [aws_security_group.strapi_ecs_sg.id]
     assign_public_ip = true
+  }
+
+  load_balancer {
+    target_group_arn = aws_lb_target_group.strapi_tg.arn
+    container_name   = "strapi"
+    container_port   = 1337
   }
 }
