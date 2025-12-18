@@ -130,6 +130,21 @@ This task established the automated build and deployment process for the Strapi 
 
 - [CD Workflow](../.github/workflows/terraform.yml): Manually triggered to ensure control over deployments. It runs terraform plan and apply using the specified image tag to update the EC2 instance and maintain the RDS database connection.
 
+## 🏗️ Task 7: [Strapi on ECS Fargate](terraform-ecs/README.md)
+
+In this task, we moved the app from a single server (EC2) to **AWS ECS Fargate**. This makes the setup "Serverless," meaning AWS handles the infrastructure while we only focus on the container.
+
+* **ECS Fargate:** Set up the app to run without managing any servers.
+* **ALB:** Added a Load Balancer to handle traffic and check if the app is healthy.
+
+## 📊 Task 8: [CloudWatch Dashboards & Alarms](terraform-ecs/README.md)
+
+In this task, we added **AWS CloudWatch** to monitor the app. This allows us to see how the app is doing and get alerts if something goes wrong.
+
+* **Dashboard:** Built a visual screen to track CPU, Memory, and live container status.
+* **Alarms:** Set up automatic alerts that trigger if the app crashes or runs out of memory.
+* **Logs:** Centralized all application logs so we can troubleshoot errors easily.
+
 ## 📚 Project Structure
 
 | Folder | Purpose |
