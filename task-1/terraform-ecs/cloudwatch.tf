@@ -141,13 +141,13 @@ resource "aws_cloudwatch_dashboard" "strapi" {
         height = 6
         properties = {
           region = var.aws_region
-          title  = "Network Traffic In and Out"
+          title  = "Network Traffic (Bytes)"
           view   = "timeSeries"
           stat   = "Sum"
           period = 120
           metrics = [
-            ["ECS/ContainerInsights", "NetworkRxBytes", "ClusterName", aws_ecs_cluster.main.name, "ServiceName", aws_ecs_service.strapi.name, { "label" : "Network In (Bytes)" }],
-            [".", "NetworkTxBytes", ".", ".", ".", ".", { "label" : "Network Out (Bytes)" }]
+            ["ECS/ContainerInsights", "NetworkRxBytes", "ClusterName", aws_ecs_cluster.main.name, "ServiceName", aws_ecs_service.strapi.name, { "label" : "Inbound", "stat" : "Sum" }],
+            ["ECS/ContainerInsights", "NetworkTxBytes", "ClusterName", aws_ecs_cluster.main.name, "ServiceName", aws_ecs_service.strapi.name, { "label" : "Outbound", "stat" : "Sum" }]
           ]
         }
       }

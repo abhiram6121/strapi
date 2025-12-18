@@ -23,7 +23,7 @@ resource "aws_lb" "app_alb" {
   name               = "abhiram-strapi-ecs-alb"
   internal           = false
   load_balancer_type = "application"
-  subnets            = [data.aws_subnets.default.ids[0], data.aws_subnets.default.ids[1], data.aws_subnets.default.ids[2]]
+  subnets            = data.aws_subnets.default.ids
   security_groups    = [aws_security_group.alb_sg.id]
 }
 
@@ -35,7 +35,8 @@ resource "aws_lb_target_group" "strapi_tg" {
   vpc_id      = data.aws_vpc.default.id
   target_type = "ip"
   health_check {
-    path                = "/"
+    path                = "/_health"
+    matcher             = "204"
     protocol            = "HTTP"
     healthy_threshold   = 2
     unhealthy_threshold = 2

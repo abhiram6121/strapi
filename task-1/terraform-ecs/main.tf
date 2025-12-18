@@ -21,6 +21,11 @@ data "aws_subnets" "default" {
     name   = "vpc-id"
     values = [data.aws_vpc.default.id]
   }
+
+  filter {
+    name   = "default-for-az"
+    values = ["true"]
+  }
 }
 
 # Security Groups
@@ -155,7 +160,7 @@ resource "aws_ecs_service" "strapi" {
   launch_type     = "FARGATE"
 
   network_configuration {
-    subnets          = [data.aws_subnets.default.ids[0], data.aws_subnets.default.ids[1], data.aws_subnets.default.ids[2]]
+    subnets          = data.aws_subnets.default.ids
     security_groups  = [aws_security_group.strapi_ecs_sg.id]
     assign_public_ip = true
   }
