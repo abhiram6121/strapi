@@ -117,9 +117,13 @@ docker compose ps
 
 Dive into the core concepts, architecture, and advanced features of Docker, covering networking, volumes, and Docker Compose orchestration.
 
+---
+
 ## 🏗️ Task 5: [Implement Strapi stack deployment using Terraform](terraform/README.md)
 
 Provision EC2 instance, RDS PostgreSQL database, networking, and security groups. Configures EC2 with Docker via `user_data.sh` to run the containerized Strapi application.
+
+---
 
 ## 🤖 Task 6: CI/CD Pipeline Setup
 
@@ -130,12 +134,16 @@ This task established the automated build and deployment process for the Strapi 
 
 - [CD Workflow](../.github/workflows/terraform.yml): Manually triggered to ensure control over deployments. It runs terraform plan and apply using the specified image tag to update the EC2 instance and maintain the RDS database connection.
 
+---
+
 ## 🏗️ Task 7: [Strapi on ECS Fargate](terraform-ecs/README.md)
 
 In this task, we moved the app from a single server (EC2) to **AWS ECS Fargate**. This makes the setup "Serverless," meaning AWS handles the infrastructure while we only focus on the container.
 
 * **ECS Fargate:** Set up the app to run without managing any servers.
 * **ALB:** Added a Load Balancer to handle traffic and check if the app is healthy.
+
+---
 
 ## 📊 Task 8: [CloudWatch Dashboards & Alarms](terraform-ecs/README.md)
 
@@ -144,6 +152,12 @@ In this task, we added **AWS CloudWatch** to monitor the app. This allows us to 
 * **Dashboard:** Built a visual screen to track CPU, Memory, and live container status.
 * **Alarms:** Set up automatic alerts that trigger if the app crashes or runs out of memory.
 * **Logs:** Centralized all application logs so we can troubleshoot errors easily.
+
+## 🚀 Task 9: Migrate from Fargate to Fargate Spot
+In this task, we transitioned our workloads to Fargate Spot to significantly reduce infrastructure spending. This allows us to run the same containers at a fraction of the cost by utilizing spare AWS capacity.
+
+* **Cost Savings:** Switched to Spot capacity to reduce compute expenses by up to 70%.
+* **Resiliency:** Configured the app to handle spare capacity interruptions automatically.
 
 ## 📚 Project Structure
 
