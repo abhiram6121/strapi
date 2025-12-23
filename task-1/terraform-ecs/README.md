@@ -6,7 +6,7 @@ This project automates the provisioning of an AWS infrastructure that includes a
 
 * **ECS Fargate:** Scalable, serverless container orchestration.
 * **RDS PostgreSQL:** Fully managed database backend.
-* **S3 & DynamoDB:** Remote state management with native locking.
+* **S3:** Remote state management with native locking.
 * **Application Load Balancer (ALB):** Routes traffic and monitors service health.
 * **CloudWatch Logs:** Centralized logging for real-time debugging and monitoring.
 

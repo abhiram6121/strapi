@@ -153,11 +153,45 @@ In this task, we added **AWS CloudWatch** to monitor the app. This allows us to 
 * **Alarms:** Set up automatic alerts that trigger if the app crashes or runs out of memory.
 * **Logs:** Centralized all application logs so we can troubleshoot errors easily.
 
+---
+
 ## 🚀 Task 9: Migrate from Fargate to Fargate Spot
 In this task, we transitioned our workloads to Fargate Spot to significantly reduce infrastructure spending. This allows us to run the same containers at a fraction of the cost by utilizing spare AWS capacity.
 
-* **Cost Savings:** Switched to Spot capacity to reduce compute expenses by up to 70%.
-* **Resiliency:** Configured the app to handle spare capacity interruptions automatically.
+---
+
+## 🔄 Task 10: ECS Blue/Green Deployment
+This task implements a high-availability deployment strategy using AWS CodeDeploy to eliminate downtime during application updates.
+
+* **Zero Downtime:** Traffic is shifted from the old version (Blue) to the new version (Green) only after health checks pass.
+* **Traffic Shifting:** Managed by an Application Load Balancer to gradually reroute users.
+* **Instant Rollback:** Automatically reverts to the stable version if any issues are detected during the bake time.
+
+### 10.1 Deployment Steps
+
+- **Register New Version:** Apply the Terraform configuration to create a new Task Definition revision.
+
+```bash
+terraform apply
+```
+
+- **Trigger Deployment:** Execute the following commands to fetch the latest Task Definition for the specified family and initiate the CodeDeploy shift.
+
+```bash
+# 1. Get the latest ARN (e.g., family: strapi-task-abhiram)
+LATEST_ARN=$(aws ecs list-task-definitions --family-prefix <ECS_TASK_FAMILY_NAME> --query "taskDefinitionArns[-1]" --output text)
+
+# 2. Update the TaskDefinition ARN in appspec.yaml
+sed -i "s|TaskDefinition:.*|TaskDefinition: \"$LATEST_ARN\"|" appspec.yaml
+
+# 3. Start the CodeDeploy shift
+aws deploy create-deployment \
+  --application-name <CODEDEPLOY_APP_NAME> \
+  --deployment-group-name <CODEDEPLOY_GROUP_NAME> \
+  --revision "{\"revisionType\": \"AppSpecContent\", \"appSpecContent\": {\"content\": $(jq -Rs . < appspec.yaml)}}"
+```
+
+---
 
 ## 📚 Project Structure
 

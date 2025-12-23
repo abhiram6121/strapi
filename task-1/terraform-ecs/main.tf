@@ -157,7 +157,11 @@ resource "aws_ecs_service" "strapi" {
   cluster         = aws_ecs_cluster.main.id
   task_definition = aws_ecs_task_definition.strapi.arn
   desired_count   = 1
-  # launch_type     = "FARGATE" # Switch to FARGATE_SPOT
+  launch_type     = "FARGATE" # Comment out to switch to FARGATE_SPOT
+
+  deployment_controller {
+    type = "CODE_DEPLOY"
+  }
 
   network_configuration {
     subnets          = data.aws_subnets.default.ids
@@ -166,13 +170,22 @@ resource "aws_ecs_service" "strapi" {
   }
 
   load_balancer {
-    target_group_arn = aws_lb_target_group.strapi_tg.arn
+    target_group_arn = aws_lb_target_group.strapi_tg_blue.arn
     container_name   = "strapi"
     container_port   = 1337
   }
 
-  capacity_provider_strategy {
-    capacity_provider = "FARGATE_SPOT"
-    weight            = 1
+  # Uncomment to use spot instances.
+  # capacity_provider_strategy {
+  #   capacity_provider = "FARGATE_SPOT"
+  #   weight            = 1
+  # }
+
+  lifecycle {
+    ignore_changes = [
+      task_definition,
+      load_balancer,
+      desired_count
+    ]
   }
 }

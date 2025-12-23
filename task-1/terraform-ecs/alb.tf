@@ -10,6 +10,12 @@ resource "aws_security_group" "alb_sg" {
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
+  ingress {
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
   egress {
     from_port   = 0
     to_port     = 0
@@ -28,8 +34,25 @@ resource "aws_lb" "app_alb" {
 }
 
 # Target group
-resource "aws_lb_target_group" "strapi_tg" {
-  name        = "abhiram-ecs-alb-tg"
+resource "aws_lb_target_group" "strapi_tg_blue" {
+  name        = "abhiram-ecs-alb-tg-blue"
+  port        = 1337
+  protocol    = "HTTP"
+  vpc_id      = data.aws_vpc.default.id
+  target_type = "ip"
+  health_check {
+    path                = "/_health"
+    matcher             = "204"
+    protocol            = "HTTP"
+    healthy_threshold   = 2
+    unhealthy_threshold = 2
+    timeout             = 5
+    interval            = 30
+  }
+}
+
+resource "aws_lb_target_group" "strapi_tg_green" {
+  name        = "abhiram-ecs-alb-tg-green"
   port        = 1337
   protocol    = "HTTP"
   vpc_id      = data.aws_vpc.default.id
@@ -53,6 +76,10 @@ resource "aws_lb_listener" "http" {
 
   default_action {
     type             = "forward"
-    target_group_arn = aws_lb_target_group.strapi_tg.arn
+    target_group_arn = aws_lb_target_group.strapi_tg_blue.arn
+  }
+
+  lifecycle {
+    ignore_changes = [default_action]
   }
 }
