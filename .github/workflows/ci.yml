@@ -1,11 +1,7 @@
 name: CI - Build & Push Strapi Docker Image to ECR
 
 on:
-  push:
-    branches:
-      - abhiram
-    paths:
-      - 'task-1/**' 
+  workflow_dispatch:
 
 jobs:
   build-and-push:
